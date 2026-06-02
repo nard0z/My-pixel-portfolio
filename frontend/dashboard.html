@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Console Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <script src="animations.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h2>Portfolio Content Control Unit</h2>
+            <button id="killSession" class="logout-btn">Log Out</button>
+        </div>
+
+        <!-- Profile & About Me Settings -->
+        <div class="form-section animate-on-scroll">
+            <h3>Profile & About Me Settings</h3>
+            <form id="profileForm">
+                <div class="form-group full-width">
+                    <label for="profileFullname">Full Name *</label>
+                    <input type="text" id="profileFullname" required placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="profileTitle">Professional Title *</label>
+                    <input type="text" id="profileTitle" required placeholder="e.g., Full Stack Developer, UI/UX Designer">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="profileBio">Bio</label>
+                    <textarea id="profileBio" placeholder="Tell visitors about yourself..."></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="profilePicFile">Profile Image Upload</label>
+                    <input type="file" id="profilePicFile" accept="image/*" style="width: 100%; padding: 10px 12px; border: 4px solid #6a0dad; border-radius: 0; font-size: 12px; font-family: 'Press Start 2P', system-ui; background: #2e2e2e; color: #fff;">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="profilePicUrl">Or Profile Image URL</label>
+                    <input type="url" id="profilePicUrl" placeholder="https://example.com/profile.jpg (optional)">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="profileSkills">Skills (comma-separated tags)</label>
+                    <input type="text" id="profileSkills" placeholder="JavaScript, PHP, React, CSS, MySQL (optional)">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="profileEmail">Email / Gmail</label>
+                    <input type="email" id="profileEmail" placeholder="your.email@gmail.com (optional)">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="profilePhone">Phone Number</label>
+                    <input type="tel" id="profilePhone" placeholder="+63 912 345 6789 (optional)">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="profileGithub">GitHub</label>
+                    <input type="url" id="profileGithub" placeholder="https://github.com/username (optional)">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="profileFacebook">Facebook</label>
+                    <input type="url" id="profileFacebook" placeholder="https://facebook.com/username (optional)">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="profileLinkedin">LinkedIn</label>
+                    <input type="url" id="profileLinkedin" placeholder="https://linkedin.com/in/username (optional)">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="profileTwitter">Twitter / X</label>
+                    <input type="url" id="profileTwitter" placeholder="https://twitter.com/username (optional)">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="profileInstagram">Instagram</label>
+                    <input type="url" id="profileInstagram" placeholder="https://instagram.com/username (optional)">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="profileResume">Resume URL</label>
+                    <input type="url" id="profileResume" placeholder="https://drive.google.com/... or https://docs.google.com/... (optional)">
+                </div>
+
+                <div class="form-group full-width">
+                    <button type="submit" class="submit-btn">Save Profile Settings</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Change Password -->
+        <div class="form-section animate-on-scroll">
+            <h3>Change Password</h3>
+            <form id="passwordForm">
+                <div class="form-group full-width">
+                    <label for="currentPassword">Current Password *</label>
+                    <input type="password" id="currentPassword" required placeholder="Enter current password">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="newPassword">New Password *</label>
+                    <input type="password" id="newPassword" required placeholder="Enter new password (min 6 characters)">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="confirmPassword">Confirm New Password *</label>
+                    <input type="password" id="confirmPassword" required placeholder="Confirm new password">
+                </div>
+
+                <div class="form-group full-width">
+                    <button type="submit" class="submit-btn">Change Password</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Blog Posts List -->
+        <div class="projects-section animate-on-scroll">
+            <h3>Blog Posts & Achievements</h3>
+            <div id="blogList" class="project-list">
+                <div class="empty-state">
+                    <p>Loading posts...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Blogs & Achievements -->
+        <div class="form-section animate-on-scroll">
+            <h3>Add New Blog Post</h3>
+            <form id="blogForm">
+                <div class="form-group full-width">
+                    <label for="blogTitle">Title *</label>
+                    <input type="text" id="blogTitle" required placeholder="Enter post title">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="blogCategory">Category</label>
+                    <select id="blogCategory" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+                        <option value="General">General</option>
+                        <option value="Graduation">Graduation</option>
+                        <option value="OJT">OJT</option>
+                        <option value="Milestone">Milestone</option>
+                    </select>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="blogContent">Content *</label>
+                    <textarea id="blogContent" required placeholder="Write your post content..." style="min-height: 150px;"></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="blogImageFile">Image Upload</label>
+                    <input type="file" id="blogImageFile" accept="image/*" style="width: 100%; padding: 10px 12px; border: 4px solid #6a0dad; border-radius: 0; font-size: 12px; font-family: 'Press Start 2P', system-ui; background: #2e2e2e; color: #fff;">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="blogImageUrl">Or Image URL</label>
+                    <input type="url" id="blogImageUrl" placeholder="https://example.com/image.jpg (optional)">
+                </div>
+
+                <div class="form-row">
+                    <button type="submit" class="submit-btn">Add New Post</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Projects List -->
+        <div class="projects-section animate-on-scroll">
+            <h3>Portfolio Items</h3>
+            <div id="projectList" class="project-list">
+                <div class="empty-state">
+                    <p>Loading projects...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Form -->
+        <div class="form-section animate-on-scroll">
+            <h3>Add New Project</h3>
+            <form id="projectForm">
+                <div class="form-group full-width">
+                    <label for="title">Project Title *</label>
+                    <input type="text" id="title" required placeholder="Enter project title">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="description">Description</label>
+                    <textarea id="description" placeholder="Describe your project..."></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="projectImageFile">Image Upload</label>
+                    <input type="file" id="projectImageFile" accept="image/*" style="width: 100%; padding: 10px 12px; border: 4px solid #6a0dad; border-radius: 0; font-size: 12px; font-family: 'Press Start 2P', system-ui; background: #2e2e2e; color: #fff;">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="imageUrl">Or Image URL</label>
+                    <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg (optional)">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="primaryLink">Link 1 URL</label>
+                        <input type="url" id="primaryLink" placeholder="https://github.com/... (optional)">
+                    </div>
+                    <div class="form-group">
+                        <label for="linkLabel1">Link 1 Label</label>
+                        <input type="text" id="linkLabel1" placeholder="View Code" value="View Code">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="secondaryLink">Link 2 URL</label>
+                        <input type="url" id="secondaryLink" placeholder="https://demo.example.com (optional)">
+                    </div>
+                    <div class="form-group">
+                        <label for="linkLabel2">Link 2 Label</label>
+                        <input type="text" id="linkLabel2" placeholder="Live Demo" value="Live Demo">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <button type="submit" class="submit-btn">Add New Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="api.js"></script>
+    <script>
+        // Trigger animations on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const animatedElements = document.querySelectorAll('.animate-on-scroll');
+            animatedElements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.classList.add('visible');
+                }, index * 100);
+            });
+        });
+
+        // Enforce state visibility checks immediately on component execution
+        async function runSecurityInterception() {
+            const status = await PortfolioAPI.checkAuth();
+            if (!status.authenticated) {
+                alert('Access denied. Redirecting to terminal authentication portal.');
+                window.location.href = 'login.html';
+            }
+        }
+        runSecurityInterception();
+
+        // Profile Form Management
+        const profileForm = document.getElementById('profileForm');
+        
+        // Load profile on page load
+        loadProfile();
+
+        // Profile form submission handler
+        profileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const profilePicFile = document.getElementById('profilePicFile').files[0];
+            let profilePicUrl = document.getElementById('profilePicUrl').value || null;
+            
+            // Upload image if file is selected
+            if (profilePicFile) {
+                const uploadResult = await PortfolioAPI.uploadImage(profilePicFile);
+                if (uploadResult.success) {
+                    profilePicUrl = uploadResult.url;
+                } else {
+                    alert('Failed to upload image: ' + uploadResult.message);
+                    return;
+                }
+            }
+            
+            const profileData = {
+                fullname: document.getElementById('profileFullname').value,
+                title: document.getElementById('profileTitle').value,
+                bio: document.getElementById('profileBio').value,
+                profile_pic_url: profilePicUrl,
+                skills: document.getElementById('profileSkills').value || null,
+                email: document.getElementById('profileEmail').value || null,
+                phone: document.getElementById('profilePhone').value || null,
+                github: document.getElementById('profileGithub').value || null,
+                facebook: document.getElementById('profileFacebook').value || null,
+                linkedin: document.getElementById('profileLinkedin').value || null,
+                twitter: document.getElementById('profileTwitter').value || null,
+                instagram: document.getElementById('profileInstagram').value || null,
+                resume_url: document.getElementById('profileResume').value || null
+            };
+
+            const result = await PortfolioAPI.updateProfile(profileData);
+            if (result.success) {
+                alert('Profile settings saved successfully!');
+                document.getElementById('profilePicFile').value = '';
+            } else {
+                alert('Failed to save profile: ' + result.message);
+            }
+        });
+
+        // Load and populate profile form
+        async function loadProfile() {
+            const profile = await PortfolioAPI.fetchProfile();
+            if (profile) {
+                document.getElementById('profileFullname').value = profile.fullname || '';
+                document.getElementById('profileTitle').value = profile.title || '';
+                document.getElementById('profileBio').value = profile.bio || '';
+                document.getElementById('profilePicUrl').value = profile.profile_pic_url || '';
+                document.getElementById('profileSkills').value = profile.skills || '';
+                document.getElementById('profileEmail').value = profile.email || '';
+                document.getElementById('profilePhone').value = profile.phone || '';
+                document.getElementById('profileGithub').value = profile.github || '';
+                document.getElementById('profileFacebook').value = profile.facebook || '';
+                document.getElementById('profileLinkedin').value = profile.linkedin || '';
+                document.getElementById('profileTwitter').value = profile.twitter || '';
+                document.getElementById('profileInstagram').value = profile.instagram || '';
+                document.getElementById('profileResume').value = profile.resume_url || '';
+            }
+        }
+
+        // Password form submission handler
+        const passwordForm = document.getElementById('passwordForm');
+        passwordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Validate passwords match
+            if (newPassword !== confirmPassword) {
+                alert('New passwords do not match!');
+                return;
+            }
+            
+            // Validate password length
+            if (newPassword.length < 6) {
+                alert('New password must be at least 6 characters long!');
+                return;
+            }
+            
+            const result = await PortfolioAPI.changePassword(currentPassword, newPassword);
+            if (result.success) {
+                alert('Password changed successfully!');
+                passwordForm.reset();
+            } else {
+                alert('Failed to change password: ' + result.message);
+            }
+        });
+
+        // Blog Form Management
+        const blogForm = document.getElementById('blogForm');
+        const blogList = document.getElementById('blogList');
+
+        // Load blogs on page load
+        loadBlogs();
+
+        // Blog form submission handler
+        blogForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const blogImageFile = document.getElementById('blogImageFile').files[0];
+            let blogImageUrl = document.getElementById('blogImageUrl').value || null;
+
+            // Upload image if file is selected
+            if (blogImageFile) {
+                const uploadResult = await PortfolioAPI.uploadImage(blogImageFile);
+                if (uploadResult.success) {
+                    blogImageUrl = uploadResult.url;
+                } else {
+                    alert('Failed to upload image: ' + uploadResult.message);
+                    return;
+                }
+            }
+
+            const blogData = {
+                title: document.getElementById('blogTitle').value,
+                content: document.getElementById('blogContent').value,
+                image_url: blogImageUrl,
+                category: document.getElementById('blogCategory').value
+            };
+
+            const result = await PortfolioAPI.addBlog(blogData);
+            if (result.success) {
+                blogForm.reset();
+                document.getElementById('blogCategory').value = 'General';
+                loadBlogs();
+            } else {
+                alert('Failed to add post: ' + result.message);
+            }
+        });
+
+        // Load and display blogs
+        async function loadBlogs() {
+            const blogs = await PortfolioAPI.fetchBlogs();
+            renderBlogs(blogs);
+        }
+
+        // Render blogs to the DOM
+        function renderBlogs(blogs) {
+            if (!blogs || blogs.length === 0) {
+                blogList.innerHTML = '<div class="empty-state"><p>No blog posts yet. Add your first post above!</p></div>';
+                return;
+            }
+
+            blogList.innerHTML = blogs.map(blog => `
+                <div class="project-item" data-id="${blog.id}">
+                    <div class="project-thumbnail">
+                        ${blog.image_url 
+                            ? `<img src="${blog.image_url}" alt="${blog.title}" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none'; this.parentElement.textContent='No Image'">`
+                            : '<div class="placeholder">No Image</div>'
+                        }
+                    </div>
+                    <div class="project-content">
+                        <h4 class="project-title">${escapeHtml(blog.title)}</h4>
+                        <span style="display: inline-block; background: #667eea; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; margin-bottom: 0.5rem;">${escapeHtml(blog.category)}</span>
+                        <p class="project-description">${escapeHtml(blog.content)}</p>
+                        <div class="project-actions">
+                            <button class="action-btn edit-btn" onclick="editBlog(${blog.id})">Edit</button>
+                            <button class="action-btn delete-btn" onclick="deleteBlog(${blog.id})">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Edit a blog post
+        window.editBlog = function(id) {
+            window.location.href = `edit.html?type=blog&id=${id}`;
+        }
+
+        // Delete a blog post
+        window.deleteBlog = async function(id) {
+            if (confirm('Are you sure you want to delete this post?')) {
+                const result = await PortfolioAPI.deleteBlog(id);
+                if (result.success) {
+                    loadBlogs();
+                } else {
+                    alert('Failed to delete post: ' + result.message);
+                }
+            }
+        }
+
+        // Process exit command mapping requests using communicator patterns
+        document.getElementById('killSession').addEventListener('click', async () => {
+            const outcome = await PortfolioAPI.logout();
+            if (outcome.success) {
+                window.location.href = 'login.html';
+            } else {
+                alert('System exception trying to close session context.');
+            }
+        });
+
+        // Form and Project Management
+        const projectForm = document.getElementById('projectForm');
+        const projectList = document.getElementById('projectList');
+
+        // Load projects on page load
+        loadProjects();
+
+        // Form submission handler
+        projectForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const projectImageFile = document.getElementById('projectImageFile').files[0];
+            let imageUrl = document.getElementById('imageUrl').value || null;
+
+            // Upload image if file is selected
+            if (projectImageFile) {
+                const uploadResult = await PortfolioAPI.uploadImage(projectImageFile);
+                if (uploadResult.success) {
+                    imageUrl = uploadResult.url;
+                } else {
+                    alert('Failed to upload image: ' + uploadResult.message);
+                    return;
+                }
+            }
+
+            const projectData = {
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                image_url: imageUrl,
+                primary_link: document.getElementById('primaryLink').value || null,
+                secondary_link: document.getElementById('secondaryLink').value || null,
+                link_label_1: document.getElementById('linkLabel1').value || 'View Code',
+                link_label_2: document.getElementById('linkLabel2').value || 'Live Demo'
+            };
+
+            const result = await PortfolioAPI.addProject(projectData);
+            if (result.success) {
+                projectForm.reset();
+                document.getElementById('linkLabel1').value = 'View Code';
+                document.getElementById('linkLabel2').value = 'Live Demo';
+                loadProjects();
+            } else {
+                alert('Failed to add project: ' + result.message);
+            }
+        });
+
+        // Load and display projects
+        async function loadProjects() {
+            const projects = await PortfolioAPI.fetchProjects();
+            renderProjects(projects);
+        }
+
+        // Render projects to the DOM
+        function renderProjects(projects) {
+            if (!projects || projects.length === 0) {
+                projectList.innerHTML = '<div class="empty-state"><p>No portfolio items yet. Add your first project above!</p></div>';
+                return;
+            }
+
+            projectList.innerHTML = projects.map(project => `
+                <div class="project-item" data-id="${project.id}">
+                    <div class="project-thumbnail">
+                        ${project.image_url 
+                            ? `<img src="${project.image_url}" alt="${project.title}" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none'; this.parentElement.textContent='No Image'">`
+                            : '<div class="placeholder">No Image</div>'
+                        }
+                    </div>
+                    <div class="project-content">
+                        <h4 class="project-title">${escapeHtml(project.title)}</h4>
+                        ${project.description ? `<p class="project-description">${escapeHtml(project.description)}</p>` : ''}
+                        <div class="project-links">
+                            ${project.primary_link ? `<a href="${escapeHtml(project.primary_link)}" target="_blank" class="project-link">${escapeHtml(project.link_label_1 || 'Link')}</a>` : ''}
+                            ${project.secondary_link ? `<a href="${escapeHtml(project.secondary_link)}" target="_blank" class="project-link secondary">${escapeHtml(project.link_label_2 || 'Link')}</a>` : ''}
+                        </div>
+                        <div class="project-actions">
+                            <button class="action-btn edit-btn" onclick="editProject(${project.id})">Edit</button>
+                            <button class="action-btn delete-btn" onclick="deleteProject(${project.id})">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Edit a project
+        window.editProject = function(id) {
+            window.location.href = `edit.html?type=project&id=${id}`;
+        }
+
+        // Delete a project
+        window.deleteProject = async function(id) {
+            if (confirm('Are you sure you want to delete this project?')) {
+                const result = await PortfolioAPI.deleteProject(id);
+                if (result.success) {
+                    loadProjects();
+                } else {
+                    alert('Failed to delete project: ' + result.message);
+                }
+            }
+        }
+
+        // Escape HTML to prevent XSS
+        window.escapeHtml = function(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

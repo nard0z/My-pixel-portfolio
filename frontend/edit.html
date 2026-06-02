@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Item - Portfolio Console</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <script src="animations.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Edit Item</h2>
+            <button id="backBtn" class="action-btn">← Back to Dashboard</button>
+        </div>
+
+        <!-- Edit Form Container -->
+        <div class="form-section animate-on-scroll" id="editFormSection">
+            <h3 id="editFormTitle">Loading...</h3>
+            <form id="editForm">
+                <input type="hidden" id="editId">
+                <input type="hidden" id="editType">
+
+                <!-- Dynamic form fields will be inserted here -->
+                <div id="dynamicFields"></div>
+
+                <div class="form-row">
+                    <button type="submit" class="submit-btn">Save Changes</button>
+                    <button type="button" id="cancelBtn" class="action-btn cancel-btn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="api.js"></script>
+    <script>
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const editType = urlParams.get('type');
+        const editId = urlParams.get('id');
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Check authentication
+            const authStatus = await PortfolioAPI.checkAuth();
+            if (!authStatus.authenticated) {
+                alert('Access denied. Redirecting to login.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Trigger animations
+            const animatedElements = document.querySelectorAll('.animate-on-scroll');
+            animatedElements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.classList.add('visible');
+                }, index * 100);
+            });
+
+            // Load item data based on type
+            if (editType === 'project') {
+                await loadProject();
+            } else if (editType === 'blog') {
+                await loadBlog();
+            } else {
+                alert('Invalid edit type');
+                window.location.href = 'dashboard.html';
+            }
+        });
+
+        // Back button
+        document.getElementById('backBtn').addEventListener('click', () => {
+            window.location.href = 'dashboard.html';
+        });
+
+        // Cancel button
+        document.getElementById('cancelBtn').addEventListener('click', () => {
+            window.location.href = 'dashboard.html';
+        });
+
+        // Load project data
+        async function loadProject() {
+            const projects = await PortfolioAPI.fetchProjects();
+            const project = projects.find(p => p.id == editId);
+
+            if (!project) {
+                alert('Project not found');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            document.getElementById('editId').value = project.id;
+            document.getElementById('editFormTitle').textContent = 'Edit Project';
+            document.getElementById('editType').value = 'project';
+
+            const fieldsHTML = `
+                <div class="form-group full-width">
+                    <label for="title">Project Title *</label>
+                    <input type="text" id="title" required placeholder="Enter project title" value="${escapeHtml(project.title)}">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="description">Description</label>
+                    <textarea id="description" placeholder="Describe your project...">${escapeHtml(project.description || '')}</textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="projectImageFile">Image Upload</label>
+                    <input type="file" id="projectImageFile" accept="image/*" style="width: 100%; padding: 10px 12px; border: 4px solid #6a0dad; border-radius: 0; font-size: 12px; font-family: 'Press Start 2P', system-ui; background: #2e2e2e; color: #fff;">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="imageUrl">Or Image URL</label>
+                    <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg (optional)" value="${escapeHtml(project.image_url || '')}">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="primaryLink">Link 1 URL</label>
+                        <input type="url" id="primaryLink" placeholder="https://github.com/... (optional)" value="${escapeHtml(project.primary_link || '')}">
+                    </div>
+                    <div class="form-group">
+                        <label for="linkLabel1">Link 1 Label</label>
+                        <input type="text" id="linkLabel1" placeholder="View Code" value="${escapeHtml(project.link_label_1 || 'View Code')}">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="secondaryLink">Link 2 URL</label>
+                        <input type="url" id="secondaryLink" placeholder="https://demo.example.com (optional)" value="${escapeHtml(project.secondary_link || '')}">
+                    </div>
+                    <div class="form-group">
+                        <label for="linkLabel2">Link 2 Label</label>
+                        <input type="text" id="linkLabel2" placeholder="Live Demo" value="${escapeHtml(project.link_label_2 || 'Live Demo')}">
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('dynamicFields').innerHTML = fieldsHTML;
+        }
+
+        // Load blog data
+        async function loadBlog() {
+            const blogs = await PortfolioAPI.fetchBlogs();
+            const blog = blogs.find(b => b.id == editId);
+
+            if (!blog) {
+                alert('Blog post not found');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            document.getElementById('editId').value = blog.id;
+            document.getElementById('editFormTitle').textContent = 'Edit Blog Post';
+            document.getElementById('editType').value = 'blog';
+
+            const fieldsHTML = `
+                <div class="form-group full-width">
+                    <label for="blogTitle">Title *</label>
+                    <input type="text" id="blogTitle" required placeholder="Enter post title" value="${escapeHtml(blog.title)}">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="blogCategory">Category</label>
+                    <select id="blogCategory" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+                        <option value="General" ${blog.category === 'General' ? 'selected' : ''}>General</option>
+                        <option value="Graduation" ${blog.category === 'Graduation' ? 'selected' : ''}>Graduation</option>
+                        <option value="OJT" ${blog.category === 'OJT' ? 'selected' : ''}>OJT</option>
+                        <option value="Milestone" ${blog.category === 'Milestone' ? 'selected' : ''}>Milestone</option>
+                    </select>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="blogContent">Content *</label>
+                    <textarea id="blogContent" required placeholder="Write your post content..." style="min-height: 150px;">${escapeHtml(blog.content)}</textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="blogImageFile">Image Upload</label>
+                    <input type="file" id="blogImageFile" accept="image/*" style="width: 100%; padding: 10px 12px; border: 4px solid #6a0dad; border-radius: 0; font-size: 12px; font-family: 'Press Start 2P', system-ui; background: #2e2e2e; color: #fff;">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="blogImageUrl">Or Image URL</label>
+                    <input type="url" id="blogImageUrl" placeholder="https://example.com/image.jpg (optional)" value="${escapeHtml(blog.image_url || '')}">
+                </div>
+            `;
+
+            document.getElementById('dynamicFields').innerHTML = fieldsHTML;
+        }
+
+        // Handle form submission
+        document.getElementById('editForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const type = document.getElementById('editType').value;
+            const id = document.getElementById('editId').value;
+
+            if (type === 'project') {
+                await saveProject();
+            } else if (type === 'blog') {
+                await saveBlog();
+            }
+        });
+
+        // Save project
+        async function saveProject() {
+            const id = document.getElementById('editId').value;
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const imageUrl = document.getElementById('imageUrl').value;
+            const primaryLink = document.getElementById('primaryLink').value;
+            const secondaryLink = document.getElementById('secondaryLink').value;
+            const linkLabel1 = document.getElementById('linkLabel1').value;
+            const linkLabel2 = document.getElementById('linkLabel2').value;
+            const imageFile = document.getElementById('projectImageFile').files[0];
+
+            let finalImageUrl = imageUrl;
+
+            // Handle file upload
+            if (imageFile) {
+                const uploadResult = await PortfolioAPI.uploadImage(imageFile);
+                if (uploadResult.success) {
+                    finalImageUrl = uploadResult.url;
+                } else {
+                    alert('Image upload failed: ' + uploadResult.message);
+                    return;
+                }
+            }
+
+            const result = await PortfolioAPI.updateProject({
+                id,
+                title,
+                description,
+                image_url: finalImageUrl,
+                primary_link: primaryLink,
+                secondary_link: secondaryLink,
+                link_label_1: linkLabel1,
+                link_label_2: linkLabel2
+            });
+
+            if (result.success) {
+                alert('Project updated successfully!');
+                window.location.href = 'dashboard.html';
+            } else {
+                alert('Failed to update project: ' + result.message);
+            }
+        }
+
+        // Save blog
+        async function saveBlog() {
+            const id = document.getElementById('editId').value;
+            const title = document.getElementById('blogTitle').value;
+            const content = document.getElementById('blogContent').value;
+            const category = document.getElementById('blogCategory').value;
+            const imageUrl = document.getElementById('blogImageUrl').value;
+            const imageFile = document.getElementById('blogImageFile').files[0];
+
+            let finalImageUrl = imageUrl;
+
+            // Handle file upload
+            if (imageFile) {
+                const uploadResult = await PortfolioAPI.uploadImage(imageFile);
+                if (uploadResult.success) {
+                    finalImageUrl = uploadResult.url;
+                } else {
+                    alert('Image upload failed: ' + uploadResult.message);
+                    return;
+                }
+            }
+
+            const result = await PortfolioAPI.updateBlog({
+                id,
+                title,
+                content,
+                image_url: finalImageUrl,
+                category
+            });
+
+            if (result.success) {
+                alert('Blog post updated successfully!');
+                window.location.href = 'dashboard.html';
+            } else {
+                alert('Failed to update blog post: ' + result.message);
+            }
+        }
+
+        // Escape HTML helper
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

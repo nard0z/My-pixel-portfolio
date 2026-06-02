@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="animations.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Hero Section with Profile -->
+        <div class="hero" id="heroSection">
+            <div class="hero-image" id="heroImage">
+                <div class="placeholder">No Photo</div>
+            </div>
+            <div class="hero-content">
+                <h1 class="hero-name" id="heroName">Loading...</h1>
+                <p class="hero-title" id="heroTitle">Loading...</p>
+                <p class="hero-bio" id="heroBio">Loading...</p>
+                <div class="skills-section">
+                    <div class="skills-label">Skills</div>
+                    <div class="skills-container" id="skillsContainer">
+                        <span class="skill-tag">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="contact-section">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-container" id="contactContainer">
+                <p>Loading contact info...</p>
+            </div>
+        </div>
+
+        <!-- Latest Feed & Milestones -->
+        <div class="blog-section">
+            <h2 class="section-title">Latest Feed & Milestones</h2>
+            <div class="blog-grid" id="blogGrid">
+                <div class="loading">
+                    <p>Loading posts...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Portfolio Section -->
+        <div class="portfolio-section">
+            <h2 class="section-title">My Work</h2>
+            <div class="projects-grid" id="projectsGrid">
+                <div class="loading">
+                    <p>Loading projects...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="api.js"></script>
+    <script>
+        // Load profile data on page load
+        loadProfile();
+        loadBlogs();
+        loadProjects();
+
+        // Load and display profile
+        async function loadProfile() {
+            const profile = await PortfolioAPI.fetchProfile();
+            if (profile) {
+                document.getElementById('heroName').textContent = profile.fullname || 'Your Name';
+                document.getElementById('heroTitle').textContent = profile.title || 'Your Title';
+                document.getElementById('heroBio').textContent = profile.bio || 'Your bio will appear here.';
+                
+                // Handle profile image
+                const heroImage = document.getElementById('heroImage');
+                if (profile.profile_pic_url) {
+                    heroImage.innerHTML = `<img src="${escapeHtml(profile.profile_pic_url)}" alt="${escapeHtml(profile.fullname)}" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none'; this.parentElement.textContent='No Photo'">`;
+                }
+
+                // Apply scramble effect to hero name after it's loaded
+                const heroName = document.getElementById('heroName');
+                if (heroName && window.TextScramble) {
+                    const scrambler = new TextScramble(heroName);
+                    const currentText = heroName.textContent;
+                    scrambler.setText(currentText);
+                }
+                
+                // Handle skills tags
+                const skillsContainer = document.getElementById('skillsContainer');
+                if (profile.skills) {
+                    const skillsArray = profile.skills.split(',').map(s => s.trim()).filter(s => s);
+                    if (skillsArray.length > 0) {
+                        skillsContainer.innerHTML = skillsArray.map(skill => 
+                            `<span class="skill-tag">${escapeHtml(skill)}</span>`
+                        ).join('');
+                    } else {
+                        skillsContainer.innerHTML = '<span class="skill-tag">No skills listed</span>';
+                    }
+                } else {
+                    skillsContainer.innerHTML = '<span class="skill-tag">No skills listed</span>';
+                }
+
+                // Handle contact information
+                const contactContainer = document.getElementById('contactContainer');
+                const contactLinks = [];
+
+                if (profile.email) {
+                    contactLinks.push(`<a href="mailto:${escapeHtml(profile.email)}" class="contact-link email-link">📧 ${escapeHtml(profile.email)}</a>`);
+                }
+                if (profile.phone) {
+                    contactLinks.push(`<a href="tel:${escapeHtml(profile.phone)}" class="contact-link phone-link">📱 ${escapeHtml(profile.phone)}</a>`);
+                }
+                if (profile.github) {
+                    contactLinks.push(`<a href="${escapeHtml(profile.github)}" target="_blank" class="contact-link github-link">💻 GitHub</a>`);
+                }
+                if (profile.facebook) {
+                    contactLinks.push(`<a href="${escapeHtml(profile.facebook)}" target="_blank" class="contact-link facebook-link">📘 Facebook</a>`);
+                }
+                if (profile.linkedin) {
+                    contactLinks.push(`<a href="${escapeHtml(profile.linkedin)}" target="_blank" class="contact-link linkedin-link">💼 LinkedIn</a>`);
+                }
+                if (profile.twitter) {
+                    contactLinks.push(`<a href="${escapeHtml(profile.twitter)}" target="_blank" class="contact-link twitter-link">🐦 Twitter</a>`);
+                }
+                if (profile.instagram) {
+                    contactLinks.push(`<a href="${escapeHtml(profile.instagram)}" target="_blank" class="contact-link instagram-link">📷 Instagram</a>`);
+                }
+                if (profile.resume_url) {
+                    contactLinks.push(`<a href="${escapeHtml(profile.resume_url)}" target="_blank" class="contact-link resume-link">📄 Download Resume</a>`);
+                }
+
+                if (contactLinks.length > 0) {
+                    contactContainer.innerHTML = `<div class="contact-links">${contactLinks.join('')}</div>`;
+                } else {
+                    contactContainer.innerHTML = '<p class="no-contact">No contact information provided yet.</p>';
+                }
+            }
+        }
+
+        // Load and display blogs
+        async function loadBlogs() {
+            const blogs = await PortfolioAPI.fetchBlogs();
+            renderBlogs(blogs);
+        }
+
+        // Render blogs to the DOM
+        function renderBlogs(blogs) {
+            const blogGrid = document.getElementById('blogGrid');
+            
+            if (!blogs || blogs.length === 0) {
+                blogGrid.innerHTML = '<div class="empty-state"><p>No posts yet.</p></div>';
+                return;
+            }
+
+            blogGrid.innerHTML = blogs.map(blog => {
+                const categoryClass = blog.category.toLowerCase();
+                const date = new Date(blog.created_at).toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+                
+                return `
+                <div class="blog-card">
+                    <div class="blog-card-image">
+                        ${blog.image_url 
+                            ? `<img src="${escapeHtml(blog.image_url)}" alt="${escapeHtml(blog.title)}" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none'; this.parentElement.textContent='No Image'">`
+                            : '<div class="placeholder">No Image</div>'
+                        }
+                    </div>
+                    <div class="blog-card-content">
+                        <div class="blog-card-header">
+                            <h3 class="blog-card-title">${escapeHtml(blog.title)}</h3>
+                            <span class="blog-card-category ${categoryClass}">${escapeHtml(blog.category)}</span>
+                        </div>
+                        <p class="blog-card-content-text">${escapeHtml(blog.content)}</p>
+                        <div class="blog-card-date">${date}</div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        // Load and display projects
+        async function loadProjects() {
+            const projects = await PortfolioAPI.fetchProjects();
+            renderProjects(projects);
+        }
+
+        // Render projects to the DOM
+        function renderProjects(projects) {
+            const projectsGrid = document.getElementById('projectsGrid');
+            
+            if (!projects || projects.length === 0) {
+                projectsGrid.innerHTML = '<div class="empty-state"><p>No portfolio items yet.</p></div>';
+                return;
+            }
+
+            projectsGrid.innerHTML = projects.map(project => `
+                <div class="project-card">
+                    <div class="project-card-image">
+                        ${project.image_url 
+                            ? `<img src="${escapeHtml(project.image_url)}" alt="${escapeHtml(project.title)}" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none'; this.parentElement.textContent='No Image'">`
+                            : '<div class="placeholder">No Image</div>'
+                        }
+                    </div>
+                    <div class="project-card-content">
+                        <h3 class="project-card-title">${escapeHtml(project.title)}</h3>
+                        ${project.description ? `<p class="project-card-description">${escapeHtml(project.description)}</p>` : ''}
+                        <div class="project-card-links">
+                            ${project.primary_link ? `<a href="${escapeHtml(project.primary_link)}" target="_blank" class="project-link">${escapeHtml(project.link_label_1 || 'Link')}</a>` : ''}
+                            ${project.secondary_link ? `<a href="${escapeHtml(project.secondary_link)}" target="_blank" class="project-link secondary">${escapeHtml(project.link_label_2 || 'Link')}</a>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

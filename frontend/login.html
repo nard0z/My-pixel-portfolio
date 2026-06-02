@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Gate Control</title>
+    <link rel="stylesheet" href="login.css">
+    <script src="animations.js"></script>
+</head>
+<body>
+
+    <div class="login-container animate-on-scroll">
+        <div class="login-header">
+            <h1>Admin Authentication</h1>
+            <p>Enter your credentials to access the control unit</p>
+        </div>
+        <form id="controlGate">
+            <div class="form-group">
+                <label for="userInput">Username</label>
+                <input type="text" id="userInput" placeholder="Enter username" required autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label for="passInput">Password</label>
+                <input type="password" id="passInput" placeholder="Enter password" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="submit-btn">Authenticate</button>
+        </form>
+        <div id="errNotice" class="error-message"></div>
+    </div>
+
+    <script src="api.js"></script>
+    <script>
+        // Trigger animation on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginContainer = document.querySelector('.login-container');
+            setTimeout(() => {
+                loginContainer.classList.add('visible');
+            }, 100);
+        });
+
+        document.getElementById('controlGate').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const user = document.getElementById('userInput').value;
+            const pass = document.getElementById('passInput').value;
+            const errField = document.getElementById('errNotice');
+
+            errField.textContent = ""; // Clear lingering states
+
+            // Pass execution values securely into the Communicator
+            const response = await PortfolioAPI.login(user, pass);
+
+            if (response.success) {
+                window.location.href = 'dashboard.html';
+            } else {
+                errField.textContent = response.message;
+            }
+        });
+    </script>
+</body>
+</html>

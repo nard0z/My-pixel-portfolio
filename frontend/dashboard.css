@@ -1,0 +1,397 @@
+/* Retro Pixel-Art Dashboard Styling */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* { box-sizing: border-box; }
+
+/* Animation Styles */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.scramble-char {
+    display: inline-block;
+    color: #6abc3a;
+    animation: scramble-glow 0.1s ease-in-out infinite alternate;
+}
+
+@keyframes scramble-glow {
+    from {
+        text-shadow: 0 0 5px #6abc3a, 0 0 10px #6abc3a;
+    }
+    to {
+        text-shadow: 0 0 2px #6abc3a, 0 0 5px #6abc3a;
+    }
+}
+
+body {
+    font-family: 'Press Start 2P', system-ui;
+    background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #16213e 100%);
+    color: #fff;
+    padding: 2rem;
+    margin: 0;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #2e2e2e;
+    padding: 2rem;
+    border-radius: 0;
+    box-shadow: 0px 5px black, 0px -5px black, 5px 0px black, -5px 0px black, 
+                0px 10px #00000038, 5px 5px #00000038, -5px 5px #00000038, 
+                inset 0px 5px #ffffff1f, inset 0px -5px #00000030;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid #6a0dad;
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.header h2 {
+    margin: 0;
+    color: #fff;
+    font-size: 18px;
+    text-shadow: 2px 2px #000;
+}
+
+.logout-btn {
+    padding: 12px 24px;
+    background: #ff3b30;
+    color: white;
+    border: 0;
+    border-radius: 0;
+    cursor: pointer;
+    font-family: 'Press Start 2P', system-ui;
+    font-size: 10px;
+    box-shadow: 0px 5px black, 0px -5px black, 5px 0px black, -5px 0px black, 
+                0px 10px #00000038, 5px 5px #00000038, -5px 5px #00000038, 
+                inset 0px 5px #ffffff36;
+    transition: transform 0.1s;
+}
+
+.logout-btn:active {
+    transform: translateY(5px);
+    box-shadow: 0px 5px black, 0px -5px black, 5px 0px black, -5px 0px black, 
+                inset 0px 5px #00000038;
+}
+
+.logout-btn:hover {
+    background: #e03026;
+}
+
+.form-section {
+    background: #1a1a1a;
+    padding: 1.5rem;
+    border-radius: 0;
+    margin-bottom: 2rem;
+    border: 4px solid #6a0dad;
+    box-shadow: 0px 5px black, 0px -5px black, 5px 0px black, -5px 0px black,
+                0px 10px #00000038, 5px 5px #00000038, -5px 5px #00000038;
+}
+
+.form-section h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #fff;
+    font-size: 14px;
+    text-shadow: 2px 2px #000;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group.full-width {
+    grid-column: span 2;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: normal;
+    color: #b19cd9;
+    font-size: 10px;
+    text-transform: uppercase;
+}
+
+input[type="text"],
+input[type="url"],
+textarea,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 4px solid #6a0dad;
+    border-radius: 0;
+    font-size: 12px;
+    font-family: 'Press Start 2P', system-ui;
+    background: #2e2e2e;
+    color: #fff;
+    box-shadow: inset 0px 3px #00000050;
+    transition: border-color 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="url"]:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: #9b59b6;
+    background: #3a3a3a;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.6;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: #6abc3a;
+    color: white;
+    border: 0;
+    border-radius: 0;
+    font-size: 12px;
+    font-family: 'Press Start 2P', system-ui;
+    cursor: pointer;
+    box-shadow: 0px 5px black, 0px -5px black, 5px 0px black, -5px 0px black, 
+                0px 10px #00000038, 5px 5px #00000038, -5px 5px #00000038, 
+                inset 0px 5px #ffffff36;
+    transition: transform 0.1s;
+}
+
+.submit-btn:active {
+    transform: translateY(5px);
+    box-shadow: 0px 5px black, 0px -5px black, 5px 0px black, -5px 0px black, 
+                inset 0px 5px #00000038;
+}
+
+.submit-btn:hover {
+    background: #5a9a2a;
+}
+
+.submit-btn.edit-mode {
+    background: #5856d6;
+}
+
+.submit-btn.edit-mode:hover {
+    background: #4846c6;
+}
+
+.projects-section h3 {
+    margin-bottom: 1.5rem;
+    color: #fff;
+    font-size: 14px;
+    text-shadow: 2px 2px #000;
+}
+
+.project-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.project-item {
+    background: #1a1a1a;
+    border: 4px solid #6a0dad;
+    border-radius: 0;
+    padding: 1.5rem;
+    display: flex;
+    gap: 1.5rem;
+    transition: box-shadow 0.2s;
+    box-shadow: 0px 5px black, 0px -5px black, 5px 0px black, -5px 0px black, 
+                0px 10px #00000038, 5px 5px #00000038, -5px 5px #00000038;
+}
+
+.project-item:hover {
+    box-shadow: 0px 5px black, 0px -5px black, 5px 0px black, -5px 0px black, 
+                0px 15px #00000050, 5px 10px #00000050, -5px 10px #00000050;
+}
+
+.project-thumbnail {
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+    background: #2e2e2e;
+    border: 4px solid #6a0dad;
+    border-radius: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.project-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.project-thumbnail.placeholder {
+    color: #888;
+    font-size: 8px;
+    text-align: center;
+    padding: 0.5rem;
+}
+
+.project-content {
+    flex: 1;
+}
+
+.project-title {
+    font-size: 14px;
+    font-weight: normal;
+    margin: 0 0 0.5rem 0;
+    color: #fff;
+    text-shadow: 2px 2px #000;
+}
+
+.project-description {
+    color: #b19cd9;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    font-size: 10px;
+}
+
+.project-links {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.project-link {
+    padding: 10px 20px;
+    background: #6abc3a;
+    color: white;
+    text-decoration: none;
+    border-radius: 0;
+    font-size: 10px;
+    font-weight: normal;
+    font-family: 'Press Start 2P', system-ui;
+    cursor: pointer;
+    box-shadow: 0px 3px black, 0px -3px black, 3px 0px black, -3px 0px black, 
+                0px 6px #00000038, 3px 3px #00000038, -3px 3px #00000038, 
+                inset 0px 3px #ffffff36;
+    transition: transform 0.1s, opacity 0.2s;
+}
+
+.project-link:active {
+    transform: translateY(3px);
+    box-shadow: 0px 3px black, 0px -3px black, 3px 0px black, -3px 0px black, 
+                inset 0px 3px #00000038;
+}
+
+.project-link:hover {
+    opacity: 0.9;
+}
+
+.project-link.secondary {
+    background: #34c759;
+}
+
+.project-link.secondary:hover {
+    background: #2da84e;
+}
+
+.project-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.action-btn {
+    padding: 10px 20px;
+    border: 0;
+    border-radius: 0;
+    font-size: 10px;
+    font-weight: normal;
+    font-family: 'Press Start 2P', system-ui;
+    cursor: pointer;
+    box-shadow: 0px 3px black, 0px -3px black, 3px 0px black, -3px 0px black, 
+                0px 6px #00000038, 3px 3px #00000038, -3px 3px #00000038, 
+                inset 0px 3px #ffffff36;
+    transition: transform 0.1s;
+}
+
+.action-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0px 3px black, 0px -3px black, 3px 0px black, -3px 0px black, 
+                inset 0px 3px #00000038;
+}
+
+.edit-btn {
+    background: #5856d6;
+    color: white;
+}
+
+.edit-btn:hover {
+    background: #4846c6;
+}
+
+.delete-btn {
+    background: #ff3b30;
+    color: white;
+}
+
+.delete-btn:hover {
+    background: #e03026;
+}
+
+.cancel-btn {
+    background: #8e8e93;
+    color: white;
+}
+
+.cancel-btn:hover {
+    background: #636366;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #888;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 12px;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    .form-group.full-width {
+        grid-column: span 1;
+    }
+    .project-item {
+        flex-direction: column;
+    }
+    .project-thumbnail {
+        width: 100%;
+        height: 200px;
+    }
+    .header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
