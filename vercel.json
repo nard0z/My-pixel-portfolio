@@ -7,7 +7,7 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/api/index.php"
+      "dest": "backend/api/index.php"
     },
     {
       "src": "/(.*)",
